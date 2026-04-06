@@ -1368,3 +1368,30 @@ if(WIN32)
                                            "${CMAKE_CURRENT_SOURCE_DIR}")
   endif()
 endif()
+
+# Must set PUBLIC include dirs BEFORE install(TARGETS)
+target_include_directories(${TINYUSDZ_TARGET_STATIC} PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<INSTALL_INTERFACE:include/tinyusdz>
+)
+
+install(TARGETS ${TINYUSDZ_TARGET_STATIC}
+    EXPORT tinyusdzTargets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
+
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/
+    DESTINATION include/tinyusdz
+    FILES_MATCHING
+    PATTERN "*.hh"
+    PATTERN "*.h"
+    PATTERN "*.hpp"
+    PATTERN "*.inc"
+)
+
+install(EXPORT tinyusdzTargets
+    FILE tinyusdzConfig.cmake
+    NAMESPACE tinyusdz::
+    DESTINATION share/tinyusdz
+)
